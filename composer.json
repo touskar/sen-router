@@ -1,0 +1,8 @@
+{
+    "name": "round-pepa/sen-router",
+    "type": "library",
+    "require": {},
+    "autoload": {
+    "psr-4": {"SenRouter\\": "src/"}
+  }
+}
