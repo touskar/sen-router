@@ -12,29 +12,19 @@
 ## Usage
 
 ### .htacess for frontal controller
-```
+``` 
 SetEnv FRONTAL_CONTROLER index.php
-SetEnv FRONTAL_CONTROLER_SUB_DIR /public/my_github/sen-router/sample/
+SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/www/ #replace by subdir or / for non subdir project
 
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews
-    </IfModule>
-
+    Options -MultiViews
     RewriteEngine On
 
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-    # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ %{ENV:FRONTAL_CONTROLER} [L]
+    RewriteRule . %{ENV:FRONTAL_CONTROLER} [L]
 
     RewriteCond %{HTTP:Authorization} ^(.*)
     RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 </IfModule>
-
-
 ```
