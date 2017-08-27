@@ -14,6 +14,7 @@
 ### .htacess for frontal controller
 ```
 SetEnv FRONTAL_CONTROLER index.php
+SetEnv FRONTAL_CONTROLER_SUB_DIR /public/my_github/sen-router/sample/
 
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
@@ -34,5 +35,6 @@ SetEnv FRONTAL_CONTROLER index.php
     RewriteCond %{HTTP:Authorization} ^(.*)
     RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 </IfModule>
+
 
 ```

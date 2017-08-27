@@ -1,16 +1,22 @@
 <?php
 
 
+
 error_reporting(E_ALL);
 
-require_once('vendor/autoload.php');
+require_once('../vendor/autoload.php');
 use SenRouter\Http\Dispatcher\Router;
 use SenRouter\Http\Response;
 
-require_once 'sample/HomeController.php';
-require_once 'sample/HomeMiddleware.php';
+require_once 'HomeController.php';
+require_once 'HomeMiddleware.php';
 
-$router = new Router();
+$router = new Router([
+    'controllerNamespace' => '',
+    'middlewareNamespace' => '',
+    'subDirectory' => getenv('FRONTAL_CONTROLER_SUB_DIR')
+]);
+
 $router->set404Handler(function($route){
     echo 'no '.$route;
 });

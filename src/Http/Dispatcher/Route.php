@@ -3,21 +3,83 @@
 namespace SenRouter\Http\Dispatcher;
 
 class Route{
-    
-    private $allowedMethod = [];//les methode du requette passe en paramettre, enregistre les ou le methode get ou post ...
+
+    /**
+     * @var array
+     * les methode du requette passe en paramettre, enregistre les ou le methode get ou post ...
+     */
+    private $allowedMethod = [];
+
+    /**
+     * @var string
+     */
     private $pathPattern;
-    private $currentRoute;// uri qui demande la requette
+
+    /**
+     * @var string
+     */
+    private $currentRoute;
+
+    /**
+     * @var bool
+     */
     private $caseSensitive;
-    private $routeParams = [];//Recupere les paramettre passe dans le pattern
+
+    /**
+     * @var array
+     * Recupere les paramettre passe dans le pattern
+     */
+    private $routeParams = [];
+
+    /**
+     * @var string
+     */
     private $routeSeparator = "/";
+
+    /**
+     * @var string
+     */
     private $routeWithRegex;
-    private $mixes;//le controller et la methode en chaine de caractere separee par un @ ou une function
+
+    /**
+     * @var string|callable
+     * le controller et la methode en chaine de caractere separee par un @ ou une function
+     */
+    private $mixes;
+
+    /**
+     * @var array
+     */
     private $paramsKeys = [];
+
+    /**
+     * @var array
+     */
     private $paramsKeysRegex = [];
+
+    /**
+     * @var array
+     */
     private $paramsValues = [];
+
+    /**
+     * @var bool
+     */
     private $haveSetedParams = false;
+
+    /**
+     * @var
+     */
     private $router;
+
+    /**
+     * @var
+     */
     private $output;
+
+    /**
+     * @var array
+     */
     public $middlewares = [];
 
 
@@ -27,12 +89,14 @@ class Route{
         $this->currentRoute = rtrim($_SERVER['REQUEST_URI'], "/")."/";
         $this->pathPattern = rtrim($pathPattern, "/")."/";
         $this->setAllowedMethod($method);
-      //  $this->routeWithRegex = $pathPattern ;// par defaut le route avec patern est le patern
         $this->mixes = $mixes;
         $this->caseSensitive = $caseSensitive;
         
     }
-    
+
+    /**
+     * @return bool
+     */
     public function matchUrl()
     {
         if(!$this->haveSetedParams)
@@ -42,10 +106,11 @@ class Route{
         
         return preg_match($this->routeWithRegex, $this->currentRoute)
             && in_array(\SenRouter\Http\Request::getRequestMethod(), $this->allowedMethod);
-        
-        // routeWithRegex('calcul/regex1/regex2')  currentRoute('calcul/5/12')
     }
-    
+
+    /**
+     * @return string
+     */
     public function run(){
         
         if(is_callable($this->mixes))
@@ -58,7 +123,10 @@ class Route{
         
         return $this->output;
     }
-    
+
+    /**
+     * @return bool|mixed
+     */
     public function processMiddleware(){
         foreach ($this->middlewares as $middleware) {
             
@@ -79,15 +147,29 @@ class Route{
         
         return true;
     }
-    
+
+    /**
+     *
+     */
     public function prepareRunning(){
        $this->setRouteParamsValues();
     }
-    
+
+    /**
+     * @param $mixes callable
+     * @param $paramsValues array
+     * @return mixed
+     */
     public function callCosure($mixes, $paramsValues){
         return call_user_func_array($mixes, $paramsValues);
     }
-    
+
+    /**
+     * @param $mixes string
+     * @param $paramsValues
+     * @param $namespace
+     * @return mixed
+     */
     public function callController($mixes, $paramsValues, $namespace){
         
         $len = strpos($this->mixes, '@');
@@ -95,14 +177,17 @@ class Route{
         $action = substr($mixes, $len + 1);
 
         $class = new $controller();
-        $return = call_user_func_array([$class, $action],  $this->paramsValues);
+        $return = call_user_func_array([$class, $action],  $paramsValues);
         
 
         return $return;
 
         
     }
-    
+
+    /**
+     *
+     */
     public function setRouteParamsKeys(){
         $match = [];
         $start = "[a-z-A-Z_]{1}";
@@ -115,11 +200,11 @@ class Route{
         });
         
         $this->paramsKeys = $match[0];
-
-    
-        
     }
-    
+
+    /**
+     *
+     */
     public function setRouteParamsValues(){
         $match = [];
         preg_match($this->routeWithRegex,$this->currentRoute, $match);
@@ -130,7 +215,10 @@ class Route{
             $this->paramsValues[$val] = $paramsValues[$i++];
         }
     }
-    
+
+    /**
+     *
+     */
     public function setRouteParamsKeysRegex(){
         
         $this->setRouteParamsKeys();
@@ -142,8 +230,10 @@ class Route{
         
         
     }
-    
-    
+
+    /**
+     * @param $routeParams
+     */
     public function setRouteParams($routeParams)
     {
         $this->setRouteParamsKeysRegex();
@@ -161,10 +251,11 @@ class Route{
 
         $this->haveSetedParams = true;
     }
-    
 
-    
-    
+
+    /**
+     * @param $method
+     */
     private function setAllowedMethod($method){
         $methods = [];
         

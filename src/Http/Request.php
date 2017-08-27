@@ -3,23 +3,38 @@
 namespace SenRouter\Http;
 
 class Request{
-    
+
+    /**
+     *
+     */
     public function __contruct(){
         
     }
-    
+
+    /**
+     * @return string
+     */
     public static function getRequestMethod(){
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
-    
+
+    /**
+     * @return bool
+     */
     public static function isGetMethod(){
         return self::getRequestMethod() === 'get';
     }
-    
+
+    /**
+     * @return bool
+     */
     public static function isPostMethod(){
         return self::getRequestMethod() === 'post';
     }
-    
+
+    /**
+     * @return array
+     */
     public static function getAllHttpMethod(){
         return [
             'get',
@@ -30,8 +45,12 @@ class Request{
             'update'
         ];
     }
-    
-    private static $instance = null;
-    
+
+    /**
+     * @return mixed
+     */
+    public function getRequestUri(){
+        return $_SERVER['REQUEST_URI'];
+    }
     
 }

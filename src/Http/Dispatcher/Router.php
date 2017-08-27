@@ -2,23 +2,75 @@
 
 namespace SenRouter\Http\Dispatcher;
 
+use Exception;
+
 class Router{
-    
+
+    /**
+     * @var array
+     */
     private $routes = [];
 
+    /**
+     * @var Route
+     */
     private $currentProcededRoute;
+
+    /**
+     * @var bool
+     */
     private $_404 = true;
+
+    /**
+     * @var string
+     */
     public $controllerNamespace;
+
+    /**
+     * @var string
+     */
     public $middlewareNamespace;
 
+    /**
+     * @var string
+     */
+    public $subDirectory;
+
+    /**
+     * @var callable
+     */
     private $_404Handler;
     
 
-    public function __contruct($controllerNamespace = '', $middlewareNamespace = ''){
-        $this->controllerNamespace = $controllerNamespace;
-        $this->middlewareNamespace = $middlewareNamespace;
+    public function __construct($params){
+        $defaultOption = [
+            'controllerNamespace' => '',
+            'middlewareNamespace' => '',
+            'subDirectory' => ''
+        ];
+
+        $option = array_merge($defaultOption, $params);
+
+        $this->controllerNamespace = $option['controllerNamespace'];
+        $this->middlewareNamespace = $option['middlewareNamespace'];
+        $this->subDirectory = rtrim($option['subDirectory'], "/");
+
+        $this->setRequestUri();
+
+
     }
-    
+
+    private function setRequestUri(){
+        $_SERVER['REQUEST_URI'] = rtrim($_SERVER['REQUEST_URI'], "/")."/";
+        $_SERVER['REQUEST_URI'] = str_replace($this->subDirectory, '', $_SERVER['REQUEST_URI']);
+    }
+
+    /**
+     * @param $method string|array
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
     public function mixe($method, $pathPattern, $mixes)
     {
         $this->currentProcededRoute = new Route($this, $method, $pathPattern, $mixes);
@@ -26,14 +78,24 @@ class Router{
         
         return $this;
     }
-    
+
+    /**
+     * @param $middleware
+     * @return $this
+     */
     public function middleware($middleware)
     {
         $this->currentProcededRoute->middlewares[] = $middleware;
         return $this;
     }
-    
-    
+
+
+    /**
+     * @param $where array|string
+     * @param $mixes string|null
+     * @return $this
+     * @throws Exception
+     */
     public function regex($where, $mixes = null){
         
         $routesParams = [];
@@ -61,8 +123,11 @@ class Router{
         
         return $this;
     }
-    
-    
+
+
+    /**
+     *
+     */
     public function run()
     {
 
@@ -95,7 +160,7 @@ class Router{
         {
             if(is_callable($this->_404Handler))
             {
-                $route = rtrim($_SERVER['REQUEST_URI'], "/")."/";
+                $route = $_SERVER['REQUEST_URI'];
                 call_user_func_array($this->_404Handler, [
                     $route    
                 ]);
@@ -106,7 +171,10 @@ class Router{
             }
         }
     }
-    
+
+    /**
+     * @param $handler
+     */
     public function set404Handler($handler){
         $this->_404Handler = $handler;
     }
