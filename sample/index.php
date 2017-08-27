@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 require_once('../vendor/autoload.php');
 use SenRouter\Http\Dispatcher\Router;
 use SenRouter\Http\Response;
+use SenRouter\Http\Input;
 
 require_once 'HomeController.php';
 require_once 'HomeMiddleware.php';
@@ -18,12 +19,27 @@ $router = new Router([
 ]);
 
 $router->set404Handler(function($route){
-    echo 'no '.$route;
+    echo 'no route mached'.$route;
 });
 
 $router
-    ->mixe('get','/calcul1/{num1}/{num2}', function ($num1, $num2){
-         return Response::withJson([
+    ->mixe(['post', 'get'],'/post', function (){
+
+
+        var_dump(Input::get("nom"));
+
+       // var_dump(Input::input());
+       // var_dump(Input::input());
+
+
+
+        echo 12;
+    });
+
+$router
+    ->mixe('get','/calcul1/q/{num1}/12/{num2}', function ($num1, $num2){
+
+         return Response::withXml([
              'success' => 1,
              'result' => $num1 + $num2,
         ]);
@@ -35,7 +51,7 @@ $router
     ->middleware(function($num1, $num2){
         if($num1 % 2 !== 0 || $num2 % 2 !== 0 )
         {
-            Response::withStatus(415);
+            Response::withStatus(422);
             return Response::withJson([
                 'success' => -1,
                 'error' => 'params should be odd number'
@@ -49,8 +65,6 @@ $router
 $router
     ->mixe('get','/calcul2/{num1}/{num2}', 'HomeController@home')
     ->middleware('HomeMiddleware@pair');
-    ;
-    
 
 $router->run();
 

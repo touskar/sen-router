@@ -83,15 +83,14 @@ class Route{
     public $middlewares = [];
 
 
-    
+
     public function __construct($router, $method, $pathPattern, $mixes, $caseSensitive = false){
         $this->router = $router;
-        $this->currentRoute = rtrim($_SERVER['REQUEST_URI'], "/")."/";
-        $this->pathPattern = rtrim($pathPattern, "/")."/";
+        $this->currentRoute = rtrim($_SERVER['REQUEST_URI'], $this->routeSeparator);
+        $this->pathPattern = rtrim($pathPattern, $this->routeSeparator);
         $this->setAllowedMethod($method);
         $this->mixes = $mixes;
         $this->caseSensitive = $caseSensitive;
-        
     }
 
     /**
@@ -103,7 +102,7 @@ class Route{
         {
             $this->setRouteParams($this->paramsKeysRegex);
         }
-        
+
         return preg_match($this->routeWithRegex, $this->currentRoute)
             && in_array(\SenRouter\Http\Request::getRequestMethod(), $this->allowedMethod);
     }
@@ -112,7 +111,7 @@ class Route{
      * @return string
      */
     public function run(){
-        
+
         if(is_callable($this->mixes))
         {
             $this->output = $this->callCosure($this->mixes, $this->paramsValues);
@@ -120,7 +119,7 @@ class Route{
         else{
             $this->output = $this->callController($this->mixes, $this->paramsValues, $this->router->controllerNamespace);
         }
-        
+
         return $this->output;
     }
 
@@ -129,7 +128,7 @@ class Route{
      */
     public function processMiddleware(){
         foreach ($this->middlewares as $middleware) {
-            
+
             if(is_callable($middleware))
             {
                 $return = $this->callCosure($middleware, $this->paramsValues);
@@ -137,14 +136,14 @@ class Route{
             else{
                 $return = $this->callController($middleware, $this->paramsValues, $this->router->middlewareNamespace);;
             }
-            
-            
+
+
             if(is_string($return) || $return === false)
             {
                 return $return;
             }
         }
-        
+
         return true;
     }
 
@@ -152,7 +151,7 @@ class Route{
      *
      */
     public function prepareRunning(){
-       $this->setRouteParamsValues();
+        $this->setRouteParamsValues();
     }
 
     /**
@@ -171,18 +170,18 @@ class Route{
      * @return mixed
      */
     public function callController($mixes, $paramsValues, $namespace){
-        
+
         $len = strpos($this->mixes, '@');
         $controller = $namespace.''.substr($mixes, 0, $len);
         $action = substr($mixes, $len + 1);
 
         $class = new $controller();
         $return = call_user_func_array([$class, $action],  $paramsValues);
-        
+
 
         return $return;
 
-        
+
     }
 
     /**
@@ -192,13 +191,13 @@ class Route{
         $match = [];
         $start = "[a-z-A-Z_]{1}";
         $follow = "[a-z-A-Z_0-9]+";
-        
+
         preg_match_all('#\\{'.$start.$follow.'\\}#', $this->pathPattern, $match);
         array_walk($match[0], function(&$value, $key){
             $value = str_replace('{', '', $value);
             $value = str_replace('}', '', $value);
         });
-        
+
         $this->paramsKeys = $match[0];
     }
 
@@ -206,13 +205,16 @@ class Route{
      *
      */
     public function setRouteParamsValues(){
-        $match = [];
-        preg_match($this->routeWithRegex,$this->currentRoute, $match);
-        $paramsValues = array_slice(array_unique($match), 1);
+        $splitedUri = explode($this->routeSeparator, $this->currentRoute);
+        $splitedPattern = explode($this->routeSeparator, $this->pathPattern);
         $i = 0;
-        foreach($this->paramsKeys as $key => $val)
+
+        foreach ($splitedUri as $value)
         {
-            $this->paramsValues[$val] = $paramsValues[$i++];
+            if(!in_array($value, $splitedPattern))
+            {
+                $this->paramsValues[$this->paramsKeys[$i++]] = $value;
+            }
         }
     }
 
@@ -220,15 +222,15 @@ class Route{
      *
      */
     public function setRouteParamsKeysRegex(){
-        
+
         $this->setRouteParamsKeys();
         foreach ($this->paramsKeys as $key => $value) {
             $value = str_replace('{', '', $value);
             $value = str_replace('}', '', $value);
             $this->paramsKeysRegex[$value] = '.*';
         }
-        
-        
+
+
     }
 
     /**
@@ -238,16 +240,16 @@ class Route{
     {
         $this->setRouteParamsKeysRegex();
         $this->routeWithRegex = preg_quote($this->pathPattern);
-        
+
         $this->routeParams = array_merge($this->paramsKeysRegex, $routeParams);
 
 
         foreach ($this->routeParams as $name => $regex) {
             $this->routeWithRegex =  str_replace('\\{'.$name.'\\}', '('.$regex.')', $this->routeWithRegex);
         }
-        
+
         $this->routeWithRegex = "#^".$this->routeWithRegex.'(\?.*)?$#';
-    
+
 
         $this->haveSetedParams = true;
     }
@@ -258,7 +260,7 @@ class Route{
      */
     private function setAllowedMethod($method){
         $methods = [];
-        
+
         if(is_string($method))
         {
             $methods[] = $method;
@@ -275,6 +277,6 @@ class Route{
             }
         }
     }
-    
-    
+
+
 }

@@ -61,7 +61,6 @@ class Router{
     }
 
     private function setRequestUri(){
-        $_SERVER['REQUEST_URI'] = rtrim($_SERVER['REQUEST_URI'], "/")."/";
         $_SERVER['REQUEST_URI'] = str_replace($this->subDirectory, '', $_SERVER['REQUEST_URI']);
     }
 

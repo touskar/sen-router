@@ -11,6 +11,9 @@ class Request{
         
     }
 
+
+
+
     /**
      * @return string
      */
@@ -49,7 +52,7 @@ class Request{
     /**
      * @return mixed
      */
-    public function getRequestUri(){
+    public static function getRequestUri(){
         return $_SERVER['REQUEST_URI'];
     }
     
