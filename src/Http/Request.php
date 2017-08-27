@@ -4,6 +4,10 @@ namespace SenRouter\Http;
 
 class Request{
     
+    public function __contruct(){
+        
+    }
+    
     public static function getRequestMethod(){
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
@@ -26,4 +30,8 @@ class Request{
             'update'
         ];
     }
+    
+    private static $instance = null;
+    
+    
 }
