@@ -273,7 +273,9 @@ class Route{
         {
             $methods = $method;
         }
-        //getAllHttpMethod donne l'ensemble des methode de requette autorisee par le systeme
+        /**
+         * getAllHttpMethod donne l'ensemble des methode de requette autorisee par le systeme
+         */
         foreach ($methods as $value) {
             if(in_array($value, \SenRouter\Http\Request::getAllHttpMethod()))
             {
