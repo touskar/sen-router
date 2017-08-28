@@ -42,16 +42,16 @@ class Input{
                 if(strtolower($contentType) === 'application/json')
                 {
                     $return = json_decode($requestBody, true);
-
-                    if(!is_array($return))
-                    {
-                        $return = [];
-                    }
                 }
                 else if(strtolower($contentType) === 'application/x-www-form-urlencoded')
                 {
                     parse_str($requestBody, $return);
                 }
+            }
+
+            if(!is_array($return))
+            {
+                $return = [];
             }
 
             Input::$_input = $return;

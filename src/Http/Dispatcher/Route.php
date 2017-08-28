@@ -2,6 +2,8 @@
 
 namespace SenRouter\Http\Dispatcher;
 
+use Exception;
+
 class Route{
 
     /**
@@ -216,6 +218,8 @@ class Route{
                 $this->paramsValues[$this->paramsKeys[$i++]] = $value;
             }
         }
+
+        //var_dump($splitedUri, $splitedPattern);
     }
 
     /**
@@ -277,6 +281,32 @@ class Route{
             }
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getRouteSeparator()
+    {
+        return $this->routeSeparator;
+    }
+
+    /**
+     * @param string $routeSeparator
+     */
+    public function setRouteSeparator($routeSeparator)
+    {
+
+        if(in_array($routeSeparator, ["/", ".","-"]))
+        {
+            $this->routeSeparator = $routeSeparator;
+        }
+        else
+        {
+            throw new Exception('Invalid route seprator');//TODO fvf
+        }
+    }
+
+
 
 
 }

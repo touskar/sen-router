@@ -88,6 +88,16 @@ class Router{
         return $this;
     }
 
+    /**
+     * @param string $sep
+     * @return $this
+     */
+    public function separator($sep = "/")
+    {
+        $this->currentProcededRoute->setRouteSeparator($sep);
+        return $this;
+    }
+
 
     /**
      * @param $where array|string

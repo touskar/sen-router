@@ -23,21 +23,7 @@ $router->set404Handler(function($route){
 });
 
 $router
-    ->mixe(['post', 'get'],'/post', function (){
-
-
-        var_dump(Input::get("nom"));
-
-       // var_dump(Input::input());
-       // var_dump(Input::input());
-
-
-
-        echo 12;
-    });
-
-$router
-    ->mixe('get','/calcul1/q/{num1}/12/{num2}', function ($num1, $num2){
+    ->mixe('get','/calcul1-{num1}-{num2}', function ($num1, $num2){
 
          return Response::withXml([
              'success' => 1,
@@ -60,11 +46,9 @@ $router
         
         return true;
         
-    });
+    })
+    ->separator("-");
 
-$router
-    ->mixe('get','/calcul2/{num1}/{num2}', 'HomeController@home')
-    ->middleware('HomeMiddleware@pair');
 
 $router->run();
 
