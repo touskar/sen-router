@@ -162,6 +162,8 @@ class Route{
      * @return mixed
      */
     public function callCosure($mixes, $paramsValues){
+
+
         try {
             return call_user_func_array($mixes, $paramsValues);
         } catch (\ArgumentCountError $e) {
@@ -181,16 +183,12 @@ class Route{
         $controller = $namespace.'\\'.substr($mixes, 0, $len);
         $action = substr($mixes, $len + 1);
 
-        try {
-            $class = new $controller();
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-        }
+        $class = new $controller();
 
         try {
             $return = call_user_func_array([$class, $action], $paramsValues);
-        } catch (Exception $e) {
-            throw new \SenRouter\Exception\ActionNotFoundException("Action '$action' not found in '$controller'' Controller");
+        } catch (\ArgumentCountError $e) {
+            throw new \InvalidArgumentException("'Defined route separator and route separator in URL dont match'");
         }
 
         return $return;

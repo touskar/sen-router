@@ -76,6 +76,9 @@ class Router{
      */
     public function mixe($method, $pathPattern, $mixes)
     {
+        if(strpos($pathPattern, "/") !== 1){
+            $pathPattern = "/".$pathPattern;
+        }
         $this->currentProcededRoute = new Route($this, $method, $pathPattern, $mixes);
         $this->routes[] = $this->currentProcededRoute;
         
