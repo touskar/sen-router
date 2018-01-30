@@ -3,6 +3,7 @@
 namespace SenRouter\Http\Dispatcher;
 
 use Exception;
+use SenRouter\Exception\ExceptionHander;
 
 class Route{
 
@@ -162,7 +163,12 @@ class Route{
      * @return mixed
      */
     public function callCosure($mixes, $paramsValues){
-        return call_user_func_array($mixes, $paramsValues);
+        try {
+            return call_user_func_array($mixes, $paramsValues);
+        } catch (\ArgumentCountError $e) {
+            ExceptionHander::handle();
+            throw new \InvalidArgumentException("'Defined route separator and route separator in URL dont match'");
+        }
     }
 
     /**
@@ -195,7 +201,7 @@ class Route{
         $follow = "[a-z-A-Z_0-9]+";
 
         preg_match_all('#\\{'.$start.$follow.'\\}#', $this->pathPattern, $match);
-        array_walk($match[0], function(&$value, $key){
+        array_walk($match[0], function(&$value){
             $value = str_replace('{', '', $value);
             $value = str_replace('}', '', $value);
         });
@@ -293,7 +299,8 @@ class Route{
     }
 
     /**
-     * @param string $routeSeparator
+     * @param $routeSeparator
+     * @throws Exception
      */
     public function setRouteSeparator($routeSeparator)
     {
@@ -304,7 +311,8 @@ class Route{
         }
         else
         {
-            throw new Exception('Invalid route seprator');//TODO fvf
+            ExceptionHander::handle();
+            throw new \InvalidArgumentException("Invalid route separator");
         }
     }
 

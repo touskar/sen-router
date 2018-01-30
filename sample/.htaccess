@@ -1,5 +1,5 @@
 SetEnv FRONTAL_CONTROLER index.php
-SetEnv FRONTAL_CONTROLER_SUB_DIR /public/my_github/sen-router/sample/
+SetEnv FRONTAL_CONTROLER_SUB_DIR /github/sen-router/sample/
 
 <IfModule mod_rewrite.c>
     Options -MultiViews

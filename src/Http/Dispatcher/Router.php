@@ -3,6 +3,8 @@
 namespace SenRouter\Http\Dispatcher;
 
 use Exception;
+use SenRouter\Exception\ExceptionHander;
+use SenRouter\Http\Response;
 
 class Router{
 
@@ -79,7 +81,7 @@ class Router{
     }
 
     /**
-     * @param $middleware
+     * @param $middleware  string|string[]|callable|callable[]
      * @return $this
      */
     public function middleware($middleware)
@@ -113,8 +115,7 @@ class Router{
      */
     public function regex($where, $mixes = null){
         
-        $routesParams = [];
-        //verification type params
+        $routesParams = null;
         if($mixes === null)
         {
             if(is_array($where))
@@ -122,7 +123,8 @@ class Router{
                 $routesParams = $where ;
             }
             else{
-                throw new Exception('Inavlid ....');//TODO fvf
+                ExceptionHander::handle();
+                throw new \InvalidArgumentException('Invalid argument passed to regex');
             }
         }
         else{
@@ -131,8 +133,7 @@ class Router{
                 $where => strval($mixes)
             ];
         }
-        //mettre les params sur le route regex
-        
+
         $this->currentProcededRoute->setRouteParams($routesParams);
 
         
@@ -158,12 +159,11 @@ class Router{
                 
                 if(is_string($return) || $return === false)
                 {
-                    \SenRouter\Http\Response::end($return);
+                    Response::end($return);
                 }
                 else{
                     $output = $route->run();
-                    \SenRouter\Http\Response::end($output);
-                    
+                    Response::end($output);
                     break;
                 }
                 
@@ -181,7 +181,7 @@ class Router{
                 ]);
             }
             else{
-                \SenRouter\Http\Response::withStatus(404);
+                Response::withStatus(404);
                 echo '404 not found';
             }
         }
