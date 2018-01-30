@@ -84,7 +84,7 @@ $router
         'num1' => '\d+',
         'num2' => '\d+'
     ])
-    ->middleware(['HomeMiddleware@pair'])
+    ->middleware(['HomeMiddleware@pair']) //->middleware('HomeMiddleware@pair')
     ->separator("-");
     
 $router->run();
