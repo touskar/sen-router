@@ -44,13 +44,13 @@ class Router{
     private $_404Handler;
     
 
-    public function __construct($params){
+    public function __construct($params = []){
         ExceptionHander::handle();
 
         $defaultOption = [
             'controllerNamespace' => '',
             'middlewareNamespace' => '',
-            'subDirectory' => ''
+            'subDirectory' => $this->getOrDefault(getenv('FRONTAL_CONTROLER_SUB_DIR'), "")
         ];
 
         $option = array_merge($defaultOption, $params);
@@ -62,6 +62,10 @@ class Router{
         $this->setRequestUri();
 
 
+    }
+
+    private function getOrDefault($mixed, $default = ""){
+        return empty($mixed) ? $default : $mixed;
     }
 
     private function setRequestUri(){
@@ -246,7 +250,7 @@ class Router{
                 ]);
             }
             else{
-                Response::withStatus(404);
+                //Response::withStatus(404);
                 throw new \SenRouter\Exception\Exception404NotFound("Route '{$notFoundRoute}' not found");
 
             }

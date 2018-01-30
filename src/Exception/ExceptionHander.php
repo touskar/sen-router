@@ -11,6 +11,10 @@ namespace SenRouter\Exception;
 class ExceptionHander
 {
     public static function handle(){
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
