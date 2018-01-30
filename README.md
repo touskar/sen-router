@@ -9,12 +9,12 @@
 ------------------------------------------------------------------------------ 
 
 </pre>
-## Usage
+# Usage
 
-### .htacess for frontal controller
+#### .htacess for frontal controller
 ``` .htaccess
 SetEnv FRONTAL_CONTROLER index.php
-SetEnv FRONTAL_CONTROLER_SUB_DIR /path/project/ #replace by subdir or / for non subdir project
+SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/ # or / for non subdired project
 
 <IfModule mod_rewrite.c>
     Options -MultiViews
@@ -30,7 +30,7 @@ SetEnv FRONTAL_CONTROLER_SUB_DIR /path/project/ #replace by subdir or / for non 
 ```
 
 
-### index.php
+#### index.php
 
 ```php
 require_once('../vendor/autoload.php');
@@ -55,7 +55,7 @@ $router->run();
 
 ```
 
-### HomeController
+#### HomeController
 
 ```php
 use SenRouter\Http\Response;
@@ -70,7 +70,7 @@ class HomeController{
 
 ```
 
-### HomeMiddleware
+#### HomeMiddleware
 
 ```php
 use SenRouter\Http\Response;
