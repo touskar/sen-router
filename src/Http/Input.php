@@ -11,13 +11,13 @@ class Input{
      * @param null $default
      * @return null
      */
-    public static function get($name, $default = null)
+    public static function one($name, $default = null)
     {
-        $value = Input::input();
+        $value = Input::all();
         return isset($value[$name]) ? $value[$name] : $default;
     }
 
-    public static function input(){
+    public static function all(){
         if(Input::$_input === null)
         {
             $requestBody = file_get_contents("php://input");

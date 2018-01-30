@@ -3,7 +3,6 @@
 namespace SenRouter\Http\Dispatcher;
 
 use Exception;
-use SenRouter\Exception\ExceptionHander;
 
 class Route{
 
@@ -166,7 +165,7 @@ class Route{
         try {
             return call_user_func_array($mixes, $paramsValues);
         } catch (\ArgumentCountError $e) {
-            ExceptionHander::handle();
+            \SenRouter\Exception\ExceptionHander::handle();
             throw new \InvalidArgumentException("'Defined route separator and route separator in URL dont match'");
         }
     }
@@ -311,7 +310,7 @@ class Route{
         }
         else
         {
-            ExceptionHander::handle();
+            \SenRouter\Exception\ExceptionHander::handle();
             throw new \InvalidArgumentException("Invalid route separator");
         }
     }

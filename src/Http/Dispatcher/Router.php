@@ -3,7 +3,7 @@
 namespace SenRouter\Http\Dispatcher;
 
 use Exception;
-use SenRouter\Exception\ExceptionHander;
+use SenRouter\Exception\Exception404NotFound;
 use SenRouter\Http\Response;
 
 class Router{
@@ -123,7 +123,7 @@ class Router{
                 $routesParams = $where ;
             }
             else{
-                ExceptionHander::handle();
+                \SenRouter\Exception\ExceptionHander::handle();
                 throw new \InvalidArgumentException('Invalid argument passed to regex');
             }
         }
@@ -173,18 +173,22 @@ class Router{
         
         if($this->_404)
         {
+            $notFoundRoute = $_SERVER['REQUEST_URI'];
+
             if(is_callable($this->_404Handler))
             {
-                $route = $_SERVER['REQUEST_URI'];
                 call_user_func_array($this->_404Handler, [
-                    $route    
+                    $notFoundRoute
                 ]);
             }
             else{
                 Response::withStatus(404);
-                echo '404 not found';
+                \SenRouter\Exception\ExceptionHander::handle();
+                throw new Exception404NotFound("Route '{$notFoundRoute}' not found");
+
             }
         }
+
     }
 
     /**

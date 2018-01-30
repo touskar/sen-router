@@ -19,9 +19,12 @@ $router = new Router([
     'subDirectory' => getenv('FRONTAL_CONTROLER_SUB_DIR')
 ]);
 
-$router->set404Handler(function($route){
-    echo 'no route mached'.$route;
-});
+/**
+ * uncomment this to handle 404
+ */
+//$router->set404Handler(function($route){
+//    echo 'no route mached'.$route;
+//});
 
 $router
     ->mixe('get','/calcul1/{num1}/{num2}', function ($num1, $num2){
@@ -48,7 +51,7 @@ $router
         return true;
         
     })
-    ->separator("-");
+    ->separator("/");
 
 $router
     ->mixe('get','/calcul2-{num1}-{num2}', 'HomeController@calcul')
