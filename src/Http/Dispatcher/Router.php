@@ -26,17 +26,17 @@ class Router{
     /**
      * @var string
      */
-    public $controllerNamespace;
+    private $controllerNamespace;
 
     /**
      * @var string
      */
-    public $middlewareNamespace;
+    private $middlewareNamespace;
 
     /**
      * @var string
      */
-    public $subDirectory;
+    private $subDirectory;
 
     /**
      * @var callable
@@ -78,6 +78,66 @@ class Router{
         $this->routes[] = $this->currentProcededRoute;
         
         return $this;
+    }
+
+    /**
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function get($pathPattern, $mixes)
+    {
+        return $this->mixe('get', $pathPattern, $mixes);
+    }
+
+    /**
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function post($pathPattern, $mixes)
+    {
+        return $this->mixe('post', $pathPattern, $mixes);
+    }
+
+    /**
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function put($pathPattern, $mixes)
+    {
+        return $this->mixe('put', $pathPattern, $mixes);
+    }
+
+    /**
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function patch($pathPattern, $mixes)
+    {
+        return $this->mixe('patch', $pathPattern, $mixes);
+    }
+
+    /**
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function delete($pathPattern, $mixes)
+    {
+        return $this->mixe('delete', $pathPattern, $mixes);
+    }
+
+    /**
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function update($pathPattern, $mixes)
+    {
+        return $this->mixe('update', $pathPattern, $mixes);
     }
 
     /**
@@ -192,10 +252,12 @@ class Router{
     }
 
     /**
-     * @param $handler
+     * @param $handler callable
      */
     public function set404Handler($handler){
         $this->_404Handler = $handler;
     }
-    
+
+
+
 }

@@ -27,7 +27,7 @@ $router = new Router([
 //});
 
 $router
-    ->mixe('get','/calcul1/{num1}/{num2}', function ($num1, $num2){
+    ->get('/calcul1/{num1}/{num2}', function ($num1, $num2){
 
          return Response::withXml([
              'success' => 1,
@@ -54,7 +54,7 @@ $router
     ->separator("/");
 
 $router
-    ->mixe('get','/calcul2-{num1}-{num2}', 'HomeController@calcul')
+    ->get('/calcul2-{num1}-{num2}', 'HomeController@calcul')
     ->regex([
         'num1' => '\d+',
         'num2' => '\d+'
