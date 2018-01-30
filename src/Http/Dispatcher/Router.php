@@ -84,7 +84,13 @@ class Router{
      */
     public function middleware($middleware)
     {
-        $this->currentProcededRoute->middlewares[] = $middleware;
+        $middlewares = is_array($middleware) ? $middleware : [$middleware];
+        
+        foreach($middlewares as $md)
+        {
+            $this->currentProcededRoute->middlewares[] = $md;
+        }
+        
         return $this;
     }
 
