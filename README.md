@@ -12,7 +12,7 @@
 ## Usage
 
 ### .htacess for frontal controller
-``` 
+``` .htaccess
 SetEnv FRONTAL_CONTROLER index.php
 SetEnv FRONTAL_CONTROLER_SUB_DIR /path/project/ #replace by subdir or / for non subdir project
 
@@ -32,7 +32,7 @@ SetEnv FRONTAL_CONTROLER_SUB_DIR /path/project/ #replace by subdir or / for non 
 
 ### index.php
 
-```
+```php
 require_once('../vendor/autoload.php');
 require_once 'HomeController.php';
 require_once 'HomeMiddleware.php';
@@ -92,7 +92,7 @@ $router->run();
 
 ### HomeController
 
-```
+```php
 use SenRouter\Http\Response;
 class HomeController{
     
@@ -107,7 +107,7 @@ class HomeController{
 
 ### HomeMiddleware
 
-```
+```php
 use SenRouter\Http\Response;
 class HomeMiddleware{
     
