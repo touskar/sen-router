@@ -165,7 +165,6 @@ class Route{
         try {
             return call_user_func_array($mixes, $paramsValues);
         } catch (\ArgumentCountError $e) {
-            \SenRouter\Exception\ExceptionHander::handle();
             throw new \InvalidArgumentException("'Defined route separator and route separator in URL dont match'");
         }
     }
@@ -178,16 +177,23 @@ class Route{
      */
     public function callController($mixes, $paramsValues, $namespace){
 
-        $len = strpos($this->mixes, '@');
-        $controller = $namespace.''.substr($mixes, 0, $len);
+        $len = intval(strpos($mixes, '@'));
+        $controller = $namespace.'\\'.substr($mixes, 0, $len);
         $action = substr($mixes, $len + 1);
 
-        $class = new $controller();
-        $return = call_user_func_array([$class, $action],  $paramsValues);
+        try {
+            $class = new $controller();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+        }
 
+        try {
+            $return = call_user_func_array([$class, $action], $paramsValues);
+        } catch (Exception $e) {
+            throw new \SenRouter\Exception\ActionNotFoundException("Action '$action' not found in '$controller'' Controller");
+        }
 
         return $return;
-
 
     }
 
@@ -310,7 +316,6 @@ class Route{
         }
         else
         {
-            \SenRouter\Exception\ExceptionHander::handle();
             throw new \InvalidArgumentException("Invalid route separator");
         }
     }

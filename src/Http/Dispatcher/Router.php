@@ -3,7 +3,7 @@
 namespace SenRouter\Http\Dispatcher;
 
 use Exception;
-use SenRouter\Exception\Exception404NotFound;
+use SenRouter\Exception\ExceptionHander;
 use SenRouter\Http\Response;
 
 class Router{
@@ -26,17 +26,17 @@ class Router{
     /**
      * @var string
      */
-    private $controllerNamespace;
+    public $controllerNamespace;
 
     /**
      * @var string
      */
-    private $middlewareNamespace;
+    public $middlewareNamespace;
 
     /**
      * @var string
      */
-    private $subDirectory;
+    public $subDirectory;
 
     /**
      * @var callable
@@ -45,6 +45,8 @@ class Router{
     
 
     public function __construct($params){
+        ExceptionHander::handle();
+
         $defaultOption = [
             'controllerNamespace' => '',
             'middlewareNamespace' => '',
@@ -183,7 +185,6 @@ class Router{
                 $routesParams = $where ;
             }
             else{
-                \SenRouter\Exception\ExceptionHander::handle();
                 throw new \InvalidArgumentException('Invalid argument passed to regex');
             }
         }
@@ -243,8 +244,7 @@ class Router{
             }
             else{
                 Response::withStatus(404);
-                \SenRouter\Exception\ExceptionHander::handle();
-                throw new Exception404NotFound("Route '{$notFoundRoute}' not found");
+                throw new \SenRouter\Exception\Exception404NotFound("Route '{$notFoundRoute}' not found");
 
             }
         }

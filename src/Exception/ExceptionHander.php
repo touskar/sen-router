@@ -15,4 +15,15 @@ class ExceptionHander
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
     }
+
+
+    public static function exceptionErrorHandler($errno, $errstr, $errfile, $errline ){
+        throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+    }
+
+    public static function errorHandler(){
+        //self::handle();
+        //throw new \ErrorException();
+    }
+
 }
