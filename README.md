@@ -106,7 +106,7 @@ R::run();
 use SenRouter\Http\Response;
 class HomeController{
     
-    public function calcul($num1, $num2){
+    public function sum($num1, $num2){
         return Response::withJson([
             'result' => $num1 + $num2
         ]);
@@ -121,10 +121,14 @@ class HomeController{
 use SenRouter\Http\Response;
 class HomeMiddleware{
     
+     /**
+      * Return strict value False or no empty string to block
+      * returned value will be send as request response
+      */
     public function pair($num1, $num2){
         if($num1 % 2 !== 0 || $num2 % 2 !== 0 )
         {
-            return 'midlawre';
+            return false;// return 'some_string';
         }
     }
 }
