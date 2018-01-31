@@ -250,9 +250,9 @@ class Router{
                 ]);
             }
             else{
-                //Response::withStatus(404);
-                throw new \SenRouter\Exception\Exception404NotFound("Route '{$notFoundRoute}' not found");
-
+                Response::withStatus(404);
+                //throw new \SenRouter\Exception\Exception404NotFound("Route '{$notFoundRoute}' not found");
+                echo '404 NOT FOUND';
             }
         }
 
