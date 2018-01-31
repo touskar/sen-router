@@ -52,8 +52,11 @@ $router
         'HomeMiddleware@isOdd'
     ]);
 
-$router
-    ->post('calcul.{num1}.{num2}', 'HomeController@sum')
+$router->post('calcul.{num1}.{num2}', function ($num1, $num2){
+    return Response::withJson([
+        'result' => $num1 + $num2
+    ]);
+})
     ->regex([
         'num1' => '\d+',
         'num2' => '\d+'
@@ -85,8 +88,11 @@ R::get('calcul/{num1}/{num2}', 'HomeController@sum')
     'HomeMiddleware@isOdd'
 ]);
 
-
-R::post('calcul.{num1}.{num2}', 'HomeController@sum')
+R::post('calcul.{num1}.{num2}', function ($num1, $num2){
+    return Response::withJson([
+        'result' => $num1 + $num2
+    ]);
+})
 ->regex([
     'num1' => '\d+',
     'num2' => '\d+'
