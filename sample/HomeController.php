@@ -9,4 +9,6 @@ class HomeController{
             'result' => $num1 + $num2
         ]);
     }
+
+
 }

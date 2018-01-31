@@ -45,13 +45,15 @@ class Router{
     
 
     public function __construct($params = []){
-        ExceptionHander::handle();
+        $this->setOption($params);
+    }
 
-        $defaultOption = [
-            'controllerNamespace' => '',
-            'middlewareNamespace' => '',
-            'subDirectory' => $this->getOrDefault(getenv('FRONTAL_CONTROLER_SUB_DIR'), "")
-        ];
+    public function setConfig($params = []){
+        $this->setOption($params);
+    }
+
+    private function setOption($params = []){
+        $defaultOption = $this->getDefaultOption();
 
         $option = array_merge($defaultOption, $params);
 
@@ -60,8 +62,14 @@ class Router{
         $this->subDirectory = rtrim($option['subDirectory'], "/");
 
         $this->setRequestUri();
+    }
 
-
+    private function getDefaultOption(){
+        return [
+            'controllerNamespace' => '',
+            'middlewareNamespace' => '',
+            'subDirectory' => $this->getOrDefault(getenv('FRONTAL_CONTROLER_SUB_DIR'), "")
+        ];
     }
 
     private function getOrDefault($mixed, $default = ""){
@@ -214,6 +222,7 @@ class Router{
      */
     public function run()
     {
+        ExceptionHander::handle();
 
         for($i = 0; $i < count($this->routes); $i++)
         {
