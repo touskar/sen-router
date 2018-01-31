@@ -125,7 +125,7 @@ class HomeMiddleware{
       * Return strict value False or no empty string to block
       * returned value will be send as request response
       */
-    public function pair($num1, $num2){
+    public function isOdd($num1, $num2){
         if($num1 % 2 !== 0 || $num2 % 2 !== 0 )
         {
             return false;// return 'some_string';
