@@ -11,8 +11,8 @@
 
 </pre>
 
-# Note
-My new Account => 
+# Install
+composer require touskar/sen-router
 # Usage
 
 #### .htacess for frontal controller
