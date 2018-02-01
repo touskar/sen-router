@@ -272,7 +272,7 @@ class Route{
 
         }
 
-        $this->routeWithRegex = "#^".$this->routeWithRegex.'(\?.*)?$#';
+        $this->routeWithRegex = "#^".$this->routeWithRegex.'$#'; // .'(\?.*)?$#'
 
 
         $this->haveSetedParams = true;
