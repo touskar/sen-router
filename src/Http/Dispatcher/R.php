@@ -18,17 +18,13 @@ class R
      */
     private static $instance = null;
 
-    private function __construct()
-    {
-        $this->router = new Router();
-    }
 
     /**
      * @return Router
      */
     private static function getInstance(){
         if(self::$instance === null){
-            self::$instance = new Router();
+            self::$instance = Router::getInstance();
         }
 
         return self::$instance;

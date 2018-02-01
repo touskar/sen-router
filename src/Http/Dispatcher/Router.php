@@ -29,6 +29,12 @@ class Router{
     public $controllerNamespace;
 
     /**
+     * @var Router
+     */
+    private static $instance = null;
+
+
+    /**
      * @var string
      */
     public $middlewareNamespace;
@@ -46,6 +52,7 @@ class Router{
 
     public function __construct($params = []){
         $this->setOption($params);
+        self::$instance = $this;
     }
 
     public function setConfig($params = []){
@@ -274,6 +281,15 @@ class Router{
      */
     public function set404Handler($handler){
         $this->_404Handler = $handler;
+    }
+
+    public static function getInstance(){
+
+        if(self::$instance == null){
+            self::$instance = new Router();
+        }
+
+        return self::$instance;
     }
 
 

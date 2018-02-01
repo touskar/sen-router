@@ -62,6 +62,16 @@ R::('hello.{name}', function ($name) {
         return "Hello $name";
     })
     ->separator(".");
+    
+/**
+ * Call from static method
+ * mixte route params and query params
+ * https://example.com/user/moussa_ndour@hotmail.fr/bicis?order_by=name
+ */
+R::get('users/{email}/{entreprise}', function ($email, $entreprise) {
+    $orderBy = Input::one('order_by');
+    return "Hello $email $entreprise with query $orderBy";
+});    
 
 /**
  * Call from static method

@@ -7,6 +7,7 @@ require_once 'HomeMiddleware.php';
 use SenRouter\Http\Dispatcher\Router;
 use SenRouter\Http\Dispatcher\R;
 use SenRouter\Http\Response;
+use SenRouter\Http\Input;
 
 $router = new Router();
 
@@ -23,6 +24,17 @@ $router
         return "Hello $name";
     })
     ->separator(".");
+
+
+/**
+ * Call from static method
+ * mixte route params and query params
+ * https://example.com/user/moussa_ndour@hotmail.fr/bicis?order_by=name
+ */
+R::get('users/{email}/{entreprise}', function ($email, $entreprise) {
+    $orderBy = Input::one('order_by');
+    return "Hello $email $entreprise with query $orderBy";
+});
 
 /**
  * Call from static method
@@ -46,6 +58,6 @@ R::get('calcul.{num1}.{num2}', function ($num1, $num2) {
     ])
     ->separator(".");
 
+
+
 $router->run();
-//or
-R::run();
