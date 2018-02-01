@@ -10,6 +10,9 @@
 ------------------------------------------------------------------------------ 
 
 </pre>
+
+# Note
+My new Account => 
 # Usage
 
 #### .htacess for frontal controller
@@ -31,7 +34,7 @@ SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/ # or / for non subdired project
 ```
 
 
-#### index.php - OOP Version
+#### index.php 
 
 ```php
 require_once('../vendor/autoload.php');
@@ -39,15 +42,27 @@ require_once 'HomeController.php';
 require_once 'HomeMiddleware.php';
 
 use SenRouter\Http\Dispatcher\Router;
+use SenRouter\Http\Dispatcher\R;
+```
 
+``` php
 $router = new Router();
 
 $router
     ->get('hello/{name}', function($name){
 	    return "Hello $name";
 	});
+```
+##### Or static verion
 
-$router
+```php
+ R::get('hello/{name}', function($name){
+	    return "Hello $name";
+	});
+```
+
+```php
+ $router
     ->get('calcul/{num1}/{num2}', 'HomeController@sum')
     ->regex([
         'num1' => '\d+',
@@ -57,8 +72,10 @@ $router
         'HomeMiddleware@isOdd'
     ])
     ->separator(".");
-
-$router->post('calcul.{num1}.{num2}', function ($num1, $num2){
+```
+#### Or static version
+```php
+ R::post('calcul.{num1}.{num2}', function ($num1, $num2){
     return Response::withJson([
         'result' => $num1 + $num2
     ]);
@@ -71,39 +88,6 @@ $router->post('calcul.{num1}.{num2}', function ($num1, $num2){
         'HomeMiddleware@isOdd'
     ])
     ->separator(".");
-
-$router->run();
-
-```
-
-#### index.php - Static Version
-
-```php
-require_once('../vendor/autoload.php');
-require_once 'HomeController.php';
-require_once 'HomeMiddleware.php';
-
-use SenRouter\Http\Dispatcher\R;
-
-R::get('hello/{name}', function($name){
-	    return "Hello $name";
-});
-
-R::get('calcul/{num1}/{num2}', function ($num1, $num2){
-    return Response::withXml([
-        'result' => $num1 + $num2
-    ]);
-});
-
-R::post('calcul/{num1}/{num2}', function ($num1, $num2){
-    return Response::withJson([
-        'result' => $num1 + $num2
-    ]);
-});
-
-
-R::run();
-
 ```
 
 #### HomeController
