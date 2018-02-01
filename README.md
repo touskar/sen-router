@@ -18,7 +18,7 @@ composer require touskar/sen-router
 #### .htacess for frontal controller
 ``` .htaccess
 SetEnv FRONTAL_CONTROLER index.php
-SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/ # or / for non subdired project
+SetEnv FRONTAL_CONTROLER_SUB_DIR /web/root/ # or / for non subdired project
 
 <IfModule mod_rewrite.c>
     Options -MultiViews
