@@ -37,31 +37,26 @@ SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/ # or / for non subdired project
 #### index.php 
 
 ```php
-require_once('../vendor/autoload.php');
-
-use SenRouter\Http\Dispatcher\Router;
-use SenRouter\Http\Dispatcher\R;
-
 $router = new Router();
 
 /**
  * call from $router Object
  **/
 $router
-    ->get('hello/{name}', function($name){
-	    return "Hello $name";
-	});
-	
+    ->get('hello/{name}', function ($name) {
+        return "Hello $name";
+    });
+
 $router
-    ->get('hello.{name}', function($name){
-	    return "Hello $name";
-	})
-	->separator(".");
+    ->get('hello.{name}', function ($name) {
+        return "Hello $name";
+    })
+    ->separator(".");
 
 /**
  * Call from static method
  **/
-R::get('calcul.{num1}.{num2}', function ($num1, $num2){
+R::get('calcul.{num1}.{num2}', function ($num1, $num2) {
     return Response::withJson([
         'result' => $num1 + $num2
     ]);

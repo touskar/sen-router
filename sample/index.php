@@ -5,26 +5,28 @@ require_once 'HomeController.php';
 require_once 'HomeMiddleware.php';
 
 use SenRouter\Http\Dispatcher\Router;
+use SenRouter\Http\Dispatcher\R;
 
 $router = new Router();
 
+/**
+ * call from $router Object
+ **/
 $router
-    ->get('hello/{name}', function($name){
+    ->get('hello/{name}', function ($name) {
         return "Hello $name";
     });
 
 $router
-    ->get('calcul/{num1}/{num2}', 'HomeController@sum')
-    ->regex([
-        'num1' => '\d+',
-        'num2' => '\d+'
-    ])
-    ->middleware([
-        'HomeMiddleware@isOdd'
-    ])
+    ->get('hello.{name}', function ($name) {
+        return "Hello $name";
+    })
     ->separator(".");
 
-$router->post('calcul.{num1}.{num2}', function ($num1, $num2){
+/**
+ * Call from static method
+ **/
+R::get('calcul.{num1}.{num2}', function ($num1, $num2) {
     return Response::withJson([
         'result' => $num1 + $num2
     ]);
@@ -39,6 +41,5 @@ $router->post('calcul.{num1}.{num2}', function ($num1, $num2){
     ->separator(".");
 
 $router->run();
-
-
-// name:{regex}
+//or
+R::run();
