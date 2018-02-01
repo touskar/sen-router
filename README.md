@@ -44,7 +44,7 @@ $router = new Router();
 
 $router
     ->get('hello/{name}', function($name){
-	    echo "Hello $name";
+	    return "Hello $name";
 	});
 
 $router
@@ -84,6 +84,10 @@ require_once 'HomeController.php';
 require_once 'HomeMiddleware.php';
 
 use SenRouter\Http\Dispatcher\R;
+
+R::get('hello/{name}', function($name){
+	    return "Hello $name";
+});
 
 R::get('calcul/{num1}/{num2}', function ($num1, $num2){
     return Response::withXml([
