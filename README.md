@@ -79,28 +79,18 @@ require_once 'HomeMiddleware.php';
 
 use SenRouter\Http\Dispatcher\R;
 
-R::get('calcul/{num1}/{num2}', 'HomeController@sum')
-->regex([
-    'num1' => '\d+',
-    'num2' => '\d+'
-])
-->middleware([
-    'HomeMiddleware@isOdd'
-]);
+R::get('calcul/{num1}/{num2}', function ($num1, $num2){
+    return Response::withXml([
+        'result' => $num1 + $num2
+    ]);
+});
 
-R::post('calcul.{num1}.{num2}', function ($num1, $num2){
+R::post('calcul/{num1}/{num2}', function ($num1, $num2){
     return Response::withJson([
         'result' => $num1 + $num2
     ]);
-})
-->regex([
-    'num1' => '\d+',
-    'num2' => '\d+'
-])
-->middleware([
-    'HomeMiddleware@isOdd'
-])
-->separator(".");
+});
+
 
 R::run();
 
