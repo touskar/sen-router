@@ -6,6 +6,7 @@ require_once 'HomeMiddleware.php';
 
 use SenRouter\Http\Dispatcher\Router;
 use SenRouter\Http\Dispatcher\R;
+use SenRouter\Http\Response;
 
 $router = new Router();
 
