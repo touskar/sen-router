@@ -37,6 +37,11 @@ SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/ # or / for non subdired project
 #### index.php 
 
 ```php
+require_once('../vendor/autoload.php');
+
+use SenRouter\Http\Dispatcher\Router;
+use SenRouter\Http\Dispatcher\R;
+
 $router = new Router();
 
 /**
@@ -66,7 +71,12 @@ R::get('calcul.{num1}.{num2}', function ($num1, $num2) {
         'num2' => '\d+'
     ])
     ->middleware([
-        'HomeMiddleware@isOdd'
+        'HomeMiddleware@isOdd',
+        function ($num1, $num2) {
+            if ($num1 == $num2) {
+                return false;
+            }
+        }
     ])
     ->separator(".");
 
