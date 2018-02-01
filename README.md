@@ -38,44 +38,30 @@ SetEnv FRONTAL_CONTROLER_SUB_DIR /subdir/ # or / for non subdired project
 
 ```php
 require_once('../vendor/autoload.php');
-require_once 'HomeController.php';
-require_once 'HomeMiddleware.php';
 
 use SenRouter\Http\Dispatcher\Router;
 use SenRouter\Http\Dispatcher\R;
-```
 
-``` php
 $router = new Router();
 
+/**
+ * call from $router Object
+ **/
 $router
     ->get('hello/{name}', function($name){
 	    return "Hello $name";
 	});
-```
-##### Or static verion
-
-```php
- R::get('hello/{name}', function($name){
+	
+$router
+    ->get('hello.{name}', function($name){
 	    return "Hello $name";
-	});
-```
+	})
+	->separator(".");
 
-```php
- $router
-    ->get('calcul/{num1}/{num2}', 'HomeController@sum')
-    ->regex([
-        'num1' => '\d+',
-        'num2' => '\d+'
-    ])
-    ->middleware([
-        'HomeMiddleware@isOdd'
-    ])
-    ->separator(".");
-```
-#### Or static version
-```php
- R::post('calcul.{num1}.{num2}', function ($num1, $num2){
+/**
+ * Call from static method
+ **/
+R::get('calcul.{num1}.{num2}', function ($num1, $num2){
     return Response::withJson([
         'result' => $num1 + $num2
     ]);
@@ -88,6 +74,10 @@ $router
         'HomeMiddleware@isOdd'
     ])
     ->separator(".");
+
+$router->run();
+//or
+R::run();
 ```
 
 #### HomeController
