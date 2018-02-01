@@ -11,6 +11,9 @@
 
 </pre>
 
+#Info
+[Click to see SenRouter in Packagist](https://packagist.org/packages/touskar/sen-router)
+
 # Install
 composer require touskar/sen-router
 # Usage
