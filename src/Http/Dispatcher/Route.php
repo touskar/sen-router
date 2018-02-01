@@ -105,8 +105,12 @@ class Route{
             $this->setRouteParams($this->paramsKeysRegex);
         }
 
-        return preg_match($this->routeWithRegex, $this->currentRoute)
-            && in_array(\SenRouter\Http\Request::getRequestMethod(), $this->allowedMethod);
+        try {
+            return preg_match($this->routeWithRegex, $this->currentRoute)
+                && in_array(\SenRouter\Http\Request::getRequestMethod(), $this->allowedMethod);
+        } catch (Exception $e) {
+            throw new \SenRouter\Exception\Exception404NotFound("Invalide route regex for route {$this->pathPattern}");
+        }
     }
 
     /**
@@ -258,7 +262,13 @@ class Route{
 
 
         foreach ($this->routeParams as $name => $regex) {
+            if($regex === "*" || empty($regex))
+            {
+                $regex = ".*";
+            }
+
             $this->routeWithRegex =  str_replace('\\{'.$name.'\\}', '('.$regex.')', $this->routeWithRegex);
+
         }
 
         $this->routeWithRegex = "#^".$this->routeWithRegex.'(\?.*)?$#';
