@@ -1,3 +1,4 @@
+
 <pre>
     
  _________                       __________               __                
@@ -41,6 +42,10 @@ use SenRouter\Http\Dispatcher\Router;
 
 $router = new Router();
 
+$router
+    ->get('hello/{name}', function($name){
+	    echo "Hello $name";
+	});
 
 $router
     ->get('calcul/{num1}/{num2}', 'HomeController@sum')
@@ -50,7 +55,8 @@ $router
     ])
     ->middleware([
         'HomeMiddleware@isOdd'
-    ]);
+    ])
+    ->separator(".");
 
 $router->post('calcul.{num1}.{num2}', function ($num1, $num2){
     return Response::withJson([
