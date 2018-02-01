@@ -1,10 +1,12 @@
 {
-    "name": "round-pepa/sen-router",
+    "name": "touskar/sen-router",
+    "description": "Fast router for php with regex, middleware  route separator support",
     "type": "library",
-    "require": {
-        "filp/whoops": "^2.1"
-    },
-    "autoload": {
-    "psr-4": {"SenRouter\\": "src/"}
-  }
+    "authors": [
+        {
+            "name": "moussandour",
+            "email": "moussa_ndour@hotmail.fr"
+        }
+    ],
+    "require": {}
 }
