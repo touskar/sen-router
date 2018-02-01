@@ -55,8 +55,10 @@ $router
         return "Hello $name";
     });
 
-$router
-    ->get('hello.{name}', function ($name) {
+/**
+ * call from static method
+ **/
+R::('hello.{name}', function ($name) {
         return "Hello $name";
     })
     ->separator(".");
