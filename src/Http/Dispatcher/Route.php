@@ -240,7 +240,7 @@ class Route{
         foreach ($this->paramsKeys as $key => $value) {
             $value = str_replace('{', '', $value);
             $value = str_replace('}', '', $value);
-            $this->paramsKeysRegex[$value] = '.*';
+            $this->paramsKeysRegex[$value] = "[^{$this->getRouteSeparator()}]*";;// change'.*';
         }
 
 
