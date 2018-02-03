@@ -9,7 +9,4 @@
 namespace SenRouter\Exception;
 
 
-class Exception404NotFound extends \Exception
-{
-
-}
+class Exception404NotFound extends \Exception{}

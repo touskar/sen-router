@@ -8,7 +8,4 @@
 
 namespace SenRouter\Exception;
 
-class ExceptionInvalidRegex
-{
-
-}
+class ExceptionInvalidRegex{}

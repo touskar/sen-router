@@ -10,7 +10,8 @@ namespace SenRouter\Exception;
 
 class ExceptionHander
 {
-    public static function handle(){
+    public static function handle()
+    {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
@@ -21,11 +22,13 @@ class ExceptionHander
     }
 
 
-    public static function exceptionErrorHandler($errno, $errstr, $errfile, $errline ){
+    public static function exceptionErrorHandler($errno, $errstr, $errfile, $errline)
+    {
         throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
     }
 
-    public static function errorHandler(){
+    public static function errorHandler()
+    {
         //self::handle();
         //throw new \ErrorException();
     }

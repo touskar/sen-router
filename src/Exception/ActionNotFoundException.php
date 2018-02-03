@@ -9,7 +9,4 @@
 namespace SenRouter\Exception;
 
 
-class ActionNotFoundException extends \Exception
-{
-
-}
+class ActionNotFoundException extends \Exception{}

@@ -11,24 +11,11 @@ namespace SenRouter\Http\Dispatcher;
 
 class R
 {
-    private $router;
-
     /**
      * @var Router
      */
     private static $instance = null;
-
-
-    /**
-     * @return Router
-     */
-    private static function getInstance(){
-        if(self::$instance === null){
-            self::$instance = Router::getInstance();
-        }
-
-        return self::$instance;
-    }
+    private $router;
 
     /**
      * @param $method string|array
@@ -39,6 +26,18 @@ class R
     public static function mixe($method, $pathPattern, $mixes)
     {
         return self::getInstance()->mixe($method, $pathPattern, $mixes);
+    }
+
+    /**
+     * @return Router
+     */
+    private static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = Router::getInstance();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -110,7 +109,8 @@ class R
     /**
      *
      */
-    public static function run(){
+    public static function run()
+    {
         self::getInstance()->run();
     }
 }

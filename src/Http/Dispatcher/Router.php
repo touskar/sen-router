@@ -6,60 +6,51 @@ use Exception;
 use SenRouter\Exception\ExceptionHander;
 use SenRouter\Http\Response;
 
-class Router{
-
-    /**
-     * @var array
-     */
-    private $routes = [];
-
-    /**
-     * @var Route
-     */
-    private $currentProcededRoute;
-
-    /**
-     * @var bool
-     */
-    private $_404 = true;
-
-    /**
-     * @var string
-     */
-    public $controllerNamespace;
+class Router
+{
 
     /**
      * @var Router
      */
     private static $instance = null;
-
-
+    /**
+     * @var string
+     */
+    public $controllerNamespace;
     /**
      * @var string
      */
     public $middlewareNamespace;
-
     /**
      * @var string
      */
     public $subDirectory;
-
+    /**
+     * @var array
+     */
+    private $routes = [];
+    /**
+     * @var Route
+     */
+    private $currentProcededRoute;
+    /**
+     * @var bool
+     */
+    private $_404 = true;
     /**
      * @var callable
      */
     private $_404Handler;
-    
 
-    public function __construct($params = []){
+
+    public function __construct($params = [])
+    {
         $this->setOption($params);
         self::$instance = $this;
     }
 
-    public function setConfig($params = []){
-        $this->setOption($params);
-    }
-
-    private function setOption($params = []){
+    private function setOption($params = [])
+    {
         $defaultOption = $this->getDefaultOption();
 
         $option = array_merge($defaultOption, $params);
@@ -71,7 +62,8 @@ class Router{
         $this->setRequestUri();
     }
 
-    private function getDefaultOption(){
+    private function getDefaultOption()
+    {
         return [
             'controllerNamespace' => '',
             'middlewareNamespace' => '',
@@ -79,29 +71,29 @@ class Router{
         ];
     }
 
-    private function getOrDefault($mixed, $default = ""){
+    private function getOrDefault($mixed, $default = "")
+    {
         return empty($mixed) ? $default : $mixed;
     }
 
-    private function setRequestUri(){
+    private function setRequestUri()
+    {
         $_SERVER['REQUEST_URI'] = str_replace($this->subDirectory, '', $_SERVER['REQUEST_URI']);
     }
 
-    /**
-     * @param $method string|array
-     * @param $pathPattern string
-     * @param $mixes string|callable
-     * @return $this
-     */
-    public function mixe($method, $pathPattern, $mixes)
+    public static function getInstance()
     {
-        if(strpos($pathPattern, "/") !== 1){
-            $pathPattern = "/".$pathPattern;
+
+        if (self::$instance == null) {
+            self::$instance = new Router();
         }
-        $this->currentProcededRoute = new Route($this, $method, $pathPattern, $mixes);
-        $this->routes[] = $this->currentProcededRoute;
-        
-        return $this;
+
+        return self::$instance;
+    }
+
+    public function setConfig($params = [])
+    {
+        $this->setOption($params);
     }
 
     /**
@@ -112,6 +104,23 @@ class Router{
     public function get($pathPattern, $mixes)
     {
         return $this->mixe('get', $pathPattern, $mixes);
+    }
+
+    /**
+     * @param $method string|array
+     * @param $pathPattern string
+     * @param $mixes string|callable
+     * @return $this
+     */
+    public function mixe($method, $pathPattern, $mixes)
+    {
+        if (strpos($pathPattern, "/") !== 1) {
+            $pathPattern = "/" . $pathPattern;
+        }
+        $this->currentProcededRoute = new Route($this, $method, $pathPattern, $mixes);
+        $this->routes[] = $this->currentProcededRoute;
+
+        return $this;
     }
 
     /**
@@ -171,12 +180,11 @@ class Router{
     public function middleware($middleware)
     {
         $middlewares = is_array($middleware) ? $middleware : [$middleware];
-        
-        foreach($middlewares as $md)
-        {
+
+        foreach ($middlewares as $md) {
             $this->currentProcededRoute->middlewares[] = $md;
         }
-        
+
         return $this;
     }
 
@@ -190,28 +198,24 @@ class Router{
         return $this;
     }
 
-
     /**
      * @param $where array|string
      * @param $mixes string|null
      * @return $this
      * @throws Exception
      */
-    public function regex($where, $mixes = null){
-        
+    public function regex($where, $mixes = null)
+    {
+
         $routesParams = null;
-        if($mixes === null)
-        {
-            if(is_array($where))
-            {
-                $routesParams = $where ;
-            }
-            else{
+        if ($mixes === null) {
+            if (is_array($where)) {
+                $routesParams = $where;
+            } else {
                 throw new \InvalidArgumentException('Invalid argument passed to regex');
             }
-        }
-        else{
-            
+        } else {
+
             $routesParams = [
                 $where => strval($mixes)
             ];
@@ -219,10 +223,8 @@ class Router{
 
         $this->currentProcededRoute->setRouteParams($routesParams);
 
-        
         return $this;
     }
-
 
     /**
      *
@@ -231,41 +233,32 @@ class Router{
     {
         ExceptionHander::handle();
 
-        for($i = 0; $i < count($this->routes); $i++)
-        {
+        for ($i = 0; $i < count($this->routes); $i++) {
 
             $route = $this->routes[$i];
-            if($route->matchUrl())
-            {
+            if ($route->matchUrl()) {
                 $this->_404 = false;
                 $route->prepareRunning();
                 $return = $route->processMiddleware();
-                
-                if(is_string($return) || $return === false)
-                {
+
+                if (is_string($return) || $return === false) {
                     Response::end($return);
-                }
-                else{
+                } else {
                     $output = $route->run();
                     Response::end($output);
                     break;
                 }
-                
-                
             }
         }
-        
-        if($this->_404)
-        {
+
+        if ($this->_404) {
             $notFoundRoute = $_SERVER['REQUEST_URI'];
 
-            if(is_callable($this->_404Handler))
-            {
+            if (is_callable($this->_404Handler)) {
                 call_user_func_array($this->_404Handler, [
                     $notFoundRoute
                 ]);
-            }
-            else{
+            } else {
                 Response::withStatus(404);
                 //throw new \SenRouter\Exception\Exception404NotFound("Route '{$notFoundRoute}' not found");
                 echo '404 NOT FOUND';
@@ -279,19 +272,8 @@ class Router{
     /**
      * @param $handler callable
      */
-    public function set404Handler($handler){
+    public function set404Handler($handler)
+    {
         $this->_404Handler = $handler;
     }
-
-    public static function getInstance(){
-
-        if(self::$instance == null){
-            self::$instance = new Router();
-        }
-
-        return self::$instance;
-    }
-
-
-
 }
